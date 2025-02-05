@@ -12,6 +12,10 @@ const Home = () => {
     >
       <HeroSection />
       <Trending/>
+
+      <section className=" w-full h-[100px] " >
+        
+      </section>
     </div>
   );
 };
