@@ -7,6 +7,7 @@ const initialState = {
   navEl: null,
   mainEl: null,
   scrollUp: true,
+  page:[1]
  
 };
 
@@ -44,6 +45,10 @@ export const animateSlice = createSlice({
         state.scrollUp = payload;
 
     },
+    setPage : (state, { payload })=> {
+      state.page = [...state.page, payload];
+
+  },
 
   },
 });
@@ -59,7 +64,9 @@ export const {
     navEl,
     mainEl,
     setScrollUp,
-    scrollUp
+    scrollUp,
+    setPage,
+    page
  
 } = animateSlice.actions;
 export default animateSlice.reducer;
