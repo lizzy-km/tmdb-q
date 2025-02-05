@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import TrendingCardHolder from "./TrendingCardHolder";
 import EndPointSwitch from "./EndPointSwitch";
-import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "../../redux/services/animateSlice";
 import { useInfiniteQuery } from "@tanstack/react-query";
-const fetchAnimeTitles = async (page, type) => {
+const fetchTrendingData = async (page, type) => {
   const response = await fetch(
     `https://api.themoviedb.org/3/trending/all/${type}?api_key=a5abf7e1c956c65d2f3a65f71da4345c&page=${page}`
   );
@@ -13,17 +11,15 @@ const fetchAnimeTitles = async (page, type) => {
 };
 const Trending = () => {
   const [type, setType] = useState("day");
-  const ref = useRef(null)
+  const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   const { data, fetchNextPage, isSuccess, isLoading, isFetching } =
     useInfiniteQuery(
       ["trending", type],
-      ({ pageParam = 1 }) => fetchAnimeTitles(pageParam, type),
+      ({ pageParam = 1 }) => fetchTrendingData(pageParam, type),
       {
         getNextPageParam: ({ page = 1 }) => {
-          console.log(page);
-
           return page + 1;
         },
       }
@@ -53,11 +49,11 @@ const Trending = () => {
   }, []);
 
   const trendOnScroll = () => {
-    isVisible && nextPage()
-  }
+    isVisible && nextPage();
+  };
 
   useEffect(() => {
-    fetchAnimeTitles(1, type);
+    fetchTrendingData(1, type);
   }, [type]);
 
   return (
@@ -71,10 +67,13 @@ const Trending = () => {
 
       <EndPointSwitch setType={setType} type={type} />
 
-      <div  onScroll={trendOnScroll}  className=" flex  justify-start items-center max-w-full w-full gap-3 lg:max-w-[80%] lg:w-[80%] overflow-auto h-full ">
+      <div
+        onScroll={trendOnScroll}
+        className=" flex  justify-start items-center max-w-full w-full gap-3 lg:max-w-[80%] lg:w-[80%] overflow-auto h-full "
+      >
         {data?.pages?.map(({ results }, index) => {
           return (
-            <TrendingCardHolder 
+            <TrendingCardHolder
               isSuccess={isSuccess}
               isLoading={isLoading}
               isFetching={isFetching}
@@ -85,9 +84,10 @@ const Trending = () => {
           );
         })}
 
-        <div  ref={ref} className="  -ml-[450px] flex justify-center items-center w-[150px] h-[40%] p-2 rounded-md  ">
-        </div>
-       
+          <div
+            ref={ref}
+            className="  -ml-[450px] flex justify-center items-center w-[150px] h-[40%] p-2 rounded-md  "
+          ></div>
       </div>
     </section>
   );
