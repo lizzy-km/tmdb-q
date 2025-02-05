@@ -1,15 +1,17 @@
 import React from "react";
+import HeroSection from "./Component/HeroSection";
+import Trending from "../../Components/Trending/Trending";
 
 const Home = () => {
-
   return (
     <div
       style={{
-        marginTop: '110px'
+        marginTop: "110px",
       }}
-      className=" flex w-full h-screen min-h-screen bg-[#d4d4d4] text-[#232425] p-2  "
+      className=" flex flex-col  justify-start items-center w-full h-auto bg-[#d4d4d4] text-[#232425] "
     >
-      Home
+      <HeroSection />
+      <Trending/>
     </div>
   );
 };
