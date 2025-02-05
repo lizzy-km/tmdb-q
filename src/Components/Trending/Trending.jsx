@@ -13,7 +13,8 @@ const fetchAnimeTitles = async (page, type) => {
 };
 const Trending = () => {
   const [type, setType] = useState("day");
-  const ref = useRef()
+  const ref = useRef(null)
+  const [isVisible, setIsVisible] = useState(false);
 
   const { data, fetchNextPage, isSuccess, isLoading, isFetching } =
     useInfiniteQuery(
@@ -32,15 +33,28 @@ const Trending = () => {
     fetchNextPage();
   };
 
-  ref.current?.addEventListener("scroll", (e)=> {
-    const target = e.target;
-    const rightOffset = target.offsetLeft + target.offsetWidth;
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.5 } // Triggers when 50% of the element is in view
+    );
 
-    console.log(rightOffset);
-    
-    
-    
-  });
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  const trendOnScroll = () => {
+    isVisible && nextPage()
+  }
 
   useEffect(() => {
     fetchAnimeTitles(1, type);
@@ -57,7 +71,7 @@ const Trending = () => {
 
       <EndPointSwitch setType={setType} type={type} />
 
-      <div  ref={ref} className=" flex justify-start items-center max-w-full w-full gap-3 lg:max-w-[80%] lg:w-[80%] overflow-auto h-full ">
+      <div  onScroll={trendOnScroll}  className=" flex  justify-start items-center max-w-full w-full gap-3 lg:max-w-[80%] lg:w-[80%] overflow-auto h-full ">
         {data?.pages?.map(({ results }, index) => {
           return (
             <TrendingCardHolder 
@@ -70,6 +84,9 @@ const Trending = () => {
             />
           );
         })}
+
+        <div  ref={ref} className="  -ml-[450px] flex justify-center items-center w-[150px] h-[40%] p-2 rounded-md  ">
+        </div>
        
       </div>
     </section>
