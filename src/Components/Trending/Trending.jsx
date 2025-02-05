@@ -23,7 +23,7 @@ const Trending = () => {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
-      left: 0, // Scroll to the maximum right
+      left: 0,
       behavior: "smooth", // Smooth scrolling
     });
 
